@@ -1,0 +1,92 @@
+openapi: 3.0.0
+info:
+  title: "Trabalho Flask"
+  description: "API Agenda"
+  version: "1.0.0"
+
+servers:
+  - url: "/api"
+
+components:
+  schemas:
+    Person:
+      type: "object"
+      required:
+        - lname
+      properties:
+        fname:
+          type: "string"
+        lname:
+          type: "string"
+  parameters:
+    lname:
+      name: "lname"
+      description: "Sobrenome da pessoa para pegar"
+      in: path
+      required: True
+      schema:
+        type: "string"
+
+paths:
+  /people:
+    get:
+      operationId: "people.read_all"
+      tags:
+        - "People"
+      summary: "Ler a lista de pessoas"
+      responses:
+        "200":
+          description: "Lista de pessoas foi lida"
+    post:
+      operationId: "people.create"
+      tags:
+        - People
+      summary: "Crie uma pessoa"
+      requestBody:
+          description: "Pessoa para criar"
+          required: True
+          content:
+            application/json:
+              schema:
+                x-body-name: "person"
+                $ref: "#/components/schemas/Person"
+      responses:
+        "201":
+          description: "Pessoa foi criada"
+  /people/{lname}:
+    get:
+      operationId: "people.read_one"
+      tags:
+        - People
+      summary: "Leia uma pessoa"
+      parameters:
+        - $ref: "#/components/parameters/lname"
+      responses:
+        "200":
+          description: "Pessoa foi lida"
+    put:
+      tags:
+        - People
+      operationId: "people.update"
+      summary: "Mude dados da pessoa"
+      parameters:
+        - $ref: "#/components/parameters/lname"
+      responses:
+        "200":
+          description: "Dados da pessoa foram mudados"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: "person"
+              $ref: "#/components/schemas/Person"
+    delete:
+      tags:
+        - People
+      operationId: "people.delete"
+      summary: "Exclua uma pessoa"
+      parameters:
+        - $ref: "#/components/parameters/lname"
+      responses:
+        "204":
+          description: "Pessoa foi deletada"
